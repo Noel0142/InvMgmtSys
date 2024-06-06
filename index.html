@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to HTML</title>
+</head>
+<body>
+    <div id="markdown-content">Loading...</div>
+
+    <!-- Ensure the marked library is loaded correctly -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Log the marked object to ensure it's loaded correctly
+            console.log('Marked library:', marked);
+
+            // Check if marked is defined
+            if (typeof marked.parse !== 'function') {
+                console.error('Marked library is not loaded correctly.');
+                document.getElementById('markdown-content').innerHTML = 'Failed to load content.';
+                return;
+            }
+
+            // Define the Markdown file name
+            const fileName = "Inventory-Management-System.md";
+            
+            // Fetch the Markdown file content
+            fetch(fileName)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(markdownContent => {
+                    // Convert Markdown to HTML and insert it into the container element
+                    document.getElementById('markdown-content').innerHTML = marked.parse(markdownContent);
+                })
+                .catch(error => {
+                    console.error('Error fetching Markdown file:', error);
+                    document.getElementById('markdown-content').innerHTML = 'Failed to load content.';
+                });
+        });
+    </script>
+</body>
+</html>
